@@ -9,24 +9,27 @@ from scipy.special import expit, softmax
 
 class RNN():
     def __init__(self, input_nodes, hidden_nodes, output_nodes, learn_rate):
-        
+        #initializing size of the nueral 
         self.input_nodes  = input_nodes
         self.hidden_nodes = hidden_nodes
         self.output_nodes = output_nodes
-        
+        #initializing the weights randomly
         self.weight1    = np.random.random((hidden_nodes, input_nodes))/1000
         self.weight2    = np.random.random((output_nodes, hidden_nodes))/1000
         self.rnn_weight = np.random.random((hidden_nodes, hidden_nodes))/1000
-        
+        #to save hidden layers
         self.hidden_layer = None
-        
+        #learning rate 
         self.learn_rate = learn_rate
         pass
     
     def forward(self, x):
+        #rnn layer to save the previous hidden lyaer and use it again
         rnn_layer = np.zeros((self.rnn_weight.shape[0], 1))
+        #to save all hidden layer from all the time 
         hidden_layers = dict()
         hidden_layers = {0 : rnn_layer}
+        #loop for all the input data 
         for i, elm in enumerate(x):    
             
             input_layer  = elm
@@ -38,9 +41,10 @@ class RNN():
             pass
         return output_layer, hidden_layers
     
-    def backpropagation(self, input_layer, output_layer, rnn_hidden_layers):        
+    def backpropagation(self, input_layer, output_layer, rnn_hidden_layers):    
+        #updated all the wieghts using gradient descent
         n = len(input_layer)
-        
+        #to save the derivative 
         d_weight1    = np.zeros(self.weight1.shape)
         d_rnn_wieght = np.zeros(self.rnn_weight.shape)
         
@@ -89,14 +93,8 @@ class RNN():
             pass
         pass
     def predict(self, x):
-        rnn_layer =  np.zeros((self.rnn_weight.shape[0], 1))
-        for i, elm in enumerate(x):    
-            input_layer  = elm
-            hidden_layer = np.tanh(np.dot(self.weight1, input_layer) + np.dot(self.rnn_weight, rnn_layer))
-            output_layer = softmax(np.dot(self.weight2, hidden_layer))
-            
-            rnn_layer = hidden_layer
-            return output_layer
+        output, hidden = self.forward(x)
+        return output
         pass
     pass
 pass
