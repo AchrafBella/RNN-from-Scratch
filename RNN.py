@@ -59,7 +59,6 @@ class RNN():
             
             d_weight1 += np.dot(temp, input_layer[t].T)
             
-            d_h = np.dot(self.rnn_weight ,temp)
             pass
         # Clip to prevent exploding gradients.
         for d in [d_weight1, d_weight2, d_rnn_wieght]:
